@@ -32,7 +32,7 @@ class App extends Component {
       } else {
         //H tag number is smaller than previous one then close <ul>
         //with one level less of indentation
-        tabs=tabs.slice(1, tabs.length);
+        tabs=tabs.slice(1);
         newTOC+=tabs+"</ul>\n";
         //add the h tab inside an <li> tag
         newTOC+=tabs+"<li>"+TOC[i]+"</li>\n";
@@ -40,16 +40,16 @@ class App extends Component {
       console.log("tabs ", tabs.length);
     }
     //close any remaining <ul>
-    var regExp=/\t/;
-    //make a copy of the tabs
-    var newTabs = tabs;
+    var regExp=/\t/g;
+    //make a copy of the tabs removing one tab
+    var newTabs = tabs.slice(1);
     //one closing <ul> for any remaining tab
-/*    while(regExp.exec(tabs)!=null){
-      newTabs.slice(1, newTabs.length);
+    while(regExp.exec(tabs)!=null){
+      newTabs.slice(1);
       newTOC+=newTabs+"</ul>";
-    }*/
+    }
     //need to close always one <ul> because the first one has no indentation
-    newTOC+="</ul>";
+    // newTOC+="</ul>";
     console.log('Final TOC \n', newTOC);
     return newTOC;
   }
