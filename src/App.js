@@ -149,6 +149,8 @@ class App extends Component {
     var input = event.currentTarget.value;
 
     var r = this.parseHTag(this.state.regex1, this.state.regex2, input);
+    //set the output to the text area on the right
+    document.getElementById("HTMLOutput").value = r[1];
   }
 
   render() {
@@ -158,11 +160,11 @@ class App extends Component {
           <textarea id="HTMLInput" rows="40" cols="80"
           onChange={this.handleTextAreaChange}
           ></textarea>
-          <div>
+          {/* <div>
             <Button positive
               // onClick={this.handleCreateTOC}
             >Create TOC</Button>
-          </div>
+          </div> */}
           <textarea id="HTMLOutput" rows="40" cols="80"></textarea>
         </Segment>
       </div>
