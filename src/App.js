@@ -1,6 +1,12 @@
 import React, { Component } from 'react';
+import { Route, Switch, Redirect } from 'react-router-dom';
 import { Segment, Button} from 'semantic-ui-react'
 import './App.css';
+import userService from './utils/userService';
+import NavBar from './components/NavBar/NavBar';
+import SignupPage from './pages/SignupPage/SignupPage';
+import LoginPage from './pages/LoginPage/LoginPage';
+
 
 
 class App extends Component {
@@ -153,20 +159,66 @@ class App extends Component {
     document.getElementById("HTMLOutput").value = r[1];
   }
 
+  handleLogout = () => {
+    userService.logout();
+    this.setState({ user: null });
+  }
+
+  handleSignupOrLogin = () => {
+    this.setState({user: userService.getUser()});
+  }
+
+  async componentDidMount() {
+    const user = userService.getUser();
+    this.setState({ user });
+  }
+
   render() {
     return (
-      <div className="App">
-        <Segment inverted style={{display: "flex"}}>
-          <textarea id="HTMLInput" rows="40" cols="80"
-          onChange={this.handleTextAreaChange}
-          ></textarea>
-          {/* <div>
-            <Button positive
-              // onClick={this.handleCreateTOC}
-            >Create TOC</Button>
-          </div> */}
-          <textarea id="HTMLOutput" rows="40" cols="80"></textarea>
-        </Segment>
+      <div>
+      <Switch>
+        <Route exact path='/' render={() =>
+        <div>
+          <NavBar
+            user={this.user}
+            handleLogout={this.handleLogout}
+          />
+          <Segment.Group stacked>
+            <Segment>
+              <Segment.Group horizontal>
+                <Segment inverted>
+                  <textarea id="HTMLInput" rows="40" cols="80"
+                    onChange={this.handleTextAreaChange}
+                  ></textarea>
+                </Segment>
+                <Segment inverted>
+                <textarea id="HTMLOutput" rows="40" cols="80"></textarea>
+                </Segment>
+              </Segment.Group>
+            </Segment>
+            <Segment>
+              <div className="lineOfButtons">
+                <Button>Save</Button>
+                <Button>Save</Button>
+              </div>
+            </Segment>
+          </Segment.Group>
+          </div>
+        }/>
+        
+        <Route exact path='/signup' render={({ history }) => 
+          <SignupPage
+            history={history}
+            handleSignupOrLogin={this.handleSignupOrLogin}
+          />
+        }/>
+        <Route exact path='/login' render={({ history }) => 
+          <LoginPage
+            history={history}
+            handleSignupOrLogin={this.handleSignupOrLogin}
+          />
+        }/>
+        </Switch>
       </div>
     );
   }

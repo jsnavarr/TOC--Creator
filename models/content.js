@@ -17,11 +17,12 @@ var Schema = mongoose.Schema;
     },
     content_TOC_id: {
         type: String,
+        // required: true
     },
     date_updated: {
         type: Date,
         // default: new Date(),
-        required: true
+        // required: true
     },
     },{
     timestamps: true

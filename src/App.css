@@ -4,6 +4,7 @@
   min-height: 100vh;
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
@@ -15,4 +16,10 @@ textarea {
   border-radius: 10px;
   margin: 10px 30px;
   padding: 5px 10px;
+}
+
+.lineOfButtons {
+  display: flex;
+  flex-direction: row;
+
 }

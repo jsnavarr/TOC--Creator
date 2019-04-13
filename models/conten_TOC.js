@@ -18,7 +18,7 @@ var Schema = mongoose.Schema;
     date_updated: {
         type: Date,
         // default: new Date(),
-        required: true
+        // required: true
     },
     },{
     timestamps: true
