@@ -180,7 +180,7 @@ class App extends Component {
         <Route exact path='/' render={() =>
         <div>
           <NavBar
-            user={this.user}
+            user={this.state.user}
             handleLogout={this.handleLogout}
           />
           <Segment.Group stacked>

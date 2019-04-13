@@ -30,6 +30,7 @@
     "not ie <= 11",
     "not op_mini all"
   ],
+  "proxy": "http://localhost:3001",
   "description": "**TOC--Creator** is a tool which can be used in knowledge/articles/content databases to create a table of content based on < H > HTML tags hierarchy, i.e., < H2 > tags are subcontent inside < H1 > tags, < H3 > tags are subcontent of < H2 > tags, and so on.",
   "main": "server.js",
   "devDependencies": {},
