@@ -1,6 +1,8 @@
+body{
+  background: azure;
+}
 .App{
   text-align: center;
-  background-color: #282c34;
   min-height: 100vh;
   display: flex;
   flex-direction: row;
@@ -13,13 +15,9 @@
 
 textarea {
   display: flex;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   border-radius: 10px;
-  margin: 10px 30px;
+  margin: 0 auto;
   padding: 5px 10px;
-}
-
-.lineOfButtons {
-  display: flex;
-  flex-direction: row;
-
+  background: lightgoldenrodyellow
 }

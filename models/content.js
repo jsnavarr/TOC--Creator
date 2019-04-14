@@ -11,6 +11,10 @@ var Schema = mongoose.Schema;
         type: String,
         // required: true
     },
+    HTML_TOC: {
+        type: String,
+        // required: true
+    },   
     keywords: {
         type: String,
         // required: true
@@ -19,11 +23,11 @@ var Schema = mongoose.Schema;
         type: String,
         // required: true
     },
-    date_updated: {
-        type: Date,
-        // default: new Date(),
-        // required: true
-    },
+    // date_updated: {
+    //     type: Date,
+    //     // default: new Date(),
+    //     // required: true
+    // },
     },{
     timestamps: true
   }

@@ -1,62 +1,68 @@
 import React, { Component } from 'react';
-import { Route, Switch, Redirect } from 'react-router-dom';
-import { Segment, Button} from 'semantic-ui-react'
+import { Route, Switch, Link } from 'react-router-dom';
+import { Segment, Button, Input} from 'semantic-ui-react'
 import './App.css';
 import userService from './utils/userService';
 import NavBar from './components/NavBar/NavBar';
 import SignupPage from './pages/SignupPage/SignupPage';
+import MyContentPage from './pages/MyContentPage/MyContentPage';
 import LoginPage from './pages/LoginPage/LoginPage';
-
-
+import contentService from './utils/contentService';
 
 class App extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
       regex1: /(<\s*h([1-5]))\s*(id\s*=\s*"(\w+)"\s*)*>/g, //regExp for open H tags with and without id
       regex2: /<\s*\/h[1-5]\s*>/g, //regExp for closing H tags
-      output:"" //HTML with TOC
+      input:"", //HTML without TOC
+      output:"", //HTML with TOC
+      contentSaved: false,
     };
+    
   }
 
   formTOC (TOC, HNumberArray){
-    //add the first TOC line
-    var newTOC="<ul>\n\t<li>"+TOC[0]+"</li>\n";
-    var tabs="\t";
-    //loop through each element (starting in the 2nd)
-    for(var i=1; i<TOC.length; i++){
-      if(HNumberArray[i]===HNumberArray[i-1]){
-        //if H tag number is the same than previous one then just add <li> tags
-        newTOC+=tabs+"<li>"+TOC[i]+"</li>\n";
-      } else if(HNumberArray[i]>HNumberArray[i-1]){
-        //if H tag number is bigger than previous one then add <ul> and <li>
-        newTOC+=tabs+"<ul>\n";
-        //<li> will have one level more of indentation
-        tabs+="\t";
-        newTOC+=tabs+"<li>"+TOC[i]+"</li>\n";
-      } else {
-        //H tag number is smaller than previous one then close <ul>
-        //with one level less of indentation
-        tabs=tabs.slice(1);
-        newTOC+=tabs+"</ul>\n";
-        //add the h tab inside an <li> tag
-        newTOC+=tabs+"<li>"+TOC[i]+"</li>\n";
+    //chedk if there is data to format
+    var newTOC=null;
+    if (TOC[0]){
+      //add the first TOC line
+      newTOC="<ul>\n\t<li>"+TOC[0]+"</li>\n";
+      var tabs="\t";
+      //loop through each element (starting in the 2nd)
+      for(var i=1; i<TOC.length; i++){
+        if(HNumberArray[i]===HNumberArray[i-1]){
+          //if H tag number is the same than previous one then just add <li> tags
+          newTOC+=tabs+"<li>"+TOC[i]+"</li>\n";
+        } else if(HNumberArray[i]>HNumberArray[i-1]){
+          //if H tag number is bigger than previous one then add <ul> and <li>
+          newTOC+=tabs+"<ul>\n";
+          //<li> will have one level more of indentation
+          tabs+="\t";
+          newTOC+=tabs+"<li>"+TOC[i]+"</li>\n";
+        } else {
+          //H tag number is smaller than previous one then close <ul>
+          //with one level less of indentation
+          tabs=tabs.slice(1);
+          newTOC+=tabs+"</ul>\n";
+          //add the h tab inside an <li> tag
+          newTOC+=tabs+"<li>"+TOC[i]+"</li>\n";
+        }
+        // console.log("tabs ", tabs.length);
       }
-      console.log("tabs ", tabs.length);
+      //close any remaining <ul>
+      var regExp=/\t/g;
+      //make a copy of the tabs removing one tab
+      var newTabs = tabs.slice(1);
+      //one closing <ul> for any remaining tab
+      while(regExp.exec(tabs)!=null){
+        newTabs.slice(1);
+        newTOC+=newTabs+"</ul>";
+      }
+      //need to close always one <ul> because the first one has no indentation
+      // newTOC+="</ul>";
+      console.log('Final TOC \n', newTOC);
     }
-    //close any remaining <ul>
-    var regExp=/\t/g;
-    //make a copy of the tabs removing one tab
-    var newTabs = tabs.slice(1);
-    //one closing <ul> for any remaining tab
-    while(regExp.exec(tabs)!=null){
-      newTabs.slice(1);
-      newTOC+=newTabs+"</ul>";
-    }
-    //need to close always one <ul> because the first one has no indentation
-    // newTOC+="</ul>";
-    console.log('Final TOC \n', newTOC);
     return newTOC;
   }
 
@@ -86,7 +92,7 @@ class App extends Component {
       if(openingH && closingH){
         //check if there is already an "id"
         if(!regExp.test(openingH)){
-          console.log('there is no ID');
+          // console.log('there is no ID');
           //increase id so it is unique
           id+=1;
           //create the new entry to be added to the TOC
@@ -108,7 +114,7 @@ class App extends Component {
           inputIdx= regExpCIdx+1;
         } else {
           //there is already an ID
-          console.log('existing ID ', openingH[2]);
+          // console.log('existing ID ', openingH[2]);
           //create the new entry to be added to the TOC
           //it will start with the opening H. Add an anchor tag referencing the existing id
           //then add the rest of the content from where the opening H tag ends to the end
@@ -147,16 +153,55 @@ class App extends Component {
     console.log('TOC \n'+TOC);
     console.log('H tags \n'+HNumberArray);
     console.log('output --\n', output);
+    console.log('input --\n', str);
     return [output, TOC];
   };
 
   handleTextAreaChange = async (event)=>{
     event.persist();
     var input = event.currentTarget.value;
+    //if there is data in the input
+    if (input){
+      var r = this.parseHTag(this.state.regex1, this.state.regex2, input);
+      //if there is TOC
+      if (r && r.length>=2 && r[1]){
+      //set the output to the text area on the right
+      document.getElementById("HTMLOutput").value = r[1]+'\n'+r[0];
+      //set the states of input (no TOC) and output (with TOC)
+      this.setState({
+        input: input, 
+        output: r[1]+'\n'+r[0]});  
+      } else {
+        //the content was deleted so clean the output 
+        document.getElementById("HTMLOutput").value = "";
+        this.setState({
+          input: "", 
+          output: ""});    
+      }
+    }
+  }
 
-    var r = this.parseHTag(this.state.regex1, this.state.regex2, input);
-    //set the output to the text area on the right
-    document.getElementById("HTMLOutput").value = r[1];
+  handleNewContent = () => {
+    // console.log('app.js state ', this.state);
+    document.getElementById("inputKeyWords").value="";
+    document.getElementById("HTMLOutput").value = "";
+    document.getElementById("HTMLInput").value = "";
+    this.setState({
+      input:"",
+      output:"",
+      contentSaved: false});
+  }
+
+  handleSaveContent = () => {
+    // console.log('app.js state ', this.state);
+    var keywords = document.getElementById("inputKeyWords").value;
+    contentService.create({keywords, input: this.state.input, output:this.state.output});
+    this.setState({contentSaved: true});
+  }
+
+  handleLogout = () => {
+    userService.logout();
+    this.setState({ user: null });
   }
 
   handleLogout = () => {
@@ -174,6 +219,7 @@ class App extends Component {
   }
 
   render() {
+    // console.log('content saved ', this.state.contentSaved);
     return (
       <div>
       <Switch>
@@ -184,28 +230,56 @@ class App extends Component {
             handleLogout={this.handleLogout}
           />
           <Segment.Group stacked>
-            <Segment>
-              <Segment.Group horizontal>
-                <Segment inverted>
-                  <textarea id="HTMLInput" rows="40" cols="80"
-                    onChange={this.handleTextAreaChange}
-                  ></textarea>
-                </Segment>
-                <Segment inverted>
-                <textarea id="HTMLOutput" rows="40" cols="80"></textarea>
-                </Segment>
-              </Segment.Group>
-            </Segment>
-            <Segment>
-              <div className="lineOfButtons">
-                <Button>Save</Button>
-                <Button>Save</Button>
-              </div>
-            </Segment>
+            <Segment.Group horizontal>
+              <Segment inverted color='teal'>
+                <textarea id="HTMLInput" rows="20" cols="80"
+                  disabled = {this.state.contentSaved}
+                  onChange={this.handleTextAreaChange}
+                ></textarea>
+              </Segment>
+              <Segment inverted color='teal'>
+              <textarea disabled id="HTMLOutput" rows="20" cols="80"
+                value={this.state.output}
+              ></textarea>
+              </Segment>
+            </Segment.Group>
+            <Segment.Group horizontal>
+              <Segment>
+                <Input id="inputKeyWords" label='key words' placeholder='my key words' />
+              </Segment>
+            </Segment.Group>
+            <Segment.Group horizontal>
+              <Segment inverted color='orange'>
+                <Button 
+                    disabled = {!this.state.user || !this.state.contentSaved}
+                    color='blue'
+                    onClick={this.handleNewContent}
+                  >New</Button>
+                <Button 
+                    disabled = {!this.state.user || this.state.input==="" || this.state.contentSaved}
+                    color='teal'
+                    onClick={this.handleSaveContent}
+                  >Save</Button>
+              </Segment>
+              <Segment>
+                <Link to='/mycontent' className='MyContent-Link'>View My Content</Link>
+                {/* <Button 
+                  disabled = {!this.state.user}
+                  color='blue'
+                  onClick={this.handleViewMyContent}
+                >View My Content</Button> */}
+              </Segment>
+            </Segment.Group>
           </Segment.Group>
           </div>
         }/>
-        
+        <Route exact path='/mycontent' render={({ history }) => 
+          <MyContentPage
+            history={history}
+            user={this.state.user}
+            handleMyContent={this.handleMyContent}
+          />
+        }/>        
         <Route exact path='/signup' render={({ history }) => 
           <SignupPage
             history={history}

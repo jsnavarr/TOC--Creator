@@ -14,6 +14,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'build')));
 
 app.use('/api/users', require('./routes/api/users'));
+app.use('/api/contents', require('./routes/api/contents'));
 
 // app.use(require('./config/auth'));
 
