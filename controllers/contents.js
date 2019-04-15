@@ -2,7 +2,8 @@ var Content = require('../models/content');
 
 module.exports = {
   create,
-  index
+  index,
+  show
 };
 
 async function create(req, res) {
@@ -26,6 +27,14 @@ async function create(req, res) {
 async function index(req, res) {
   console.log('my content being called', req.body.user_id);
   const contents = await Content.find({})
+    .sort({createdAt: 1})
+    .limit(req.query.limit || 20);
+  res.json(contents);
+}
+
+async function show(req, res) {
+  console.log('show being called', req.params.id);
+  const contents = await Content.find({"owner": req.params.id})
     .sort({createdAt: 1})
     .limit(req.query.limit || 20);
   res.json(contents);

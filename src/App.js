@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route, Switch, Link } from 'react-router-dom';
+import { Route, Switch, Link, Redirect } from 'react-router-dom';
 import { Segment, Button, Input} from 'semantic-ui-react'
 import './App.css';
 import userService from './utils/userService';
@@ -241,13 +241,13 @@ class App extends Component {
           <Segment.Group stacked>
             <Segment.Group horizontal>
               <Segment inverted color='teal'>
-                <textarea id="HTMLInput" rows="20" cols="80"
+                <textarea id="HTMLInput" rows="30" cols="80"
                   disabled = {this.state.contentSaved}
                   onChange={this.handleTextAreaChange}
                 ></textarea>
               </Segment>
               <Segment inverted color='teal'>
-              <textarea disabled id="HTMLOutput" rows="20" cols="80"
+              <textarea disabled id="HTMLOutput" rows="30" cols="80"
                 value={this.state.output}
               ></textarea>
               </Segment>
@@ -271,19 +271,23 @@ class App extends Component {
                   >Save</Button>
               </Segment>
               <Segment inverted color='black' textAlign='center'>
-                <Link to='/mycontent' className='MyContent-Link'>View My Content</Link>
+                {this.state.user && <Link to='/mycontent' className='MyContent-Link'>
+                View My Content</Link>}
               </Segment>
             </Segment.Group>
           </Segment.Group>
           </div>
         }/>
-        <Route exact path='/mycontent' render={({ history }) => 
+        <Route exact path='/mycontent' render={({ history }) =>
+          userService.getUser() ?
           <MyContentPage
             history={history}
             user={this.state.user}
             contents={this.state.contents}
             handleMyContent={this.handleMyContent}
           />
+          :
+            <Redirect to='/login'/>
         }/>        
         <Route exact path='/signup' render={({ history }) => 
           <SignupPage
