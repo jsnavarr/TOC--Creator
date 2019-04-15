@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const contentsCtrl = require('../../controllers/contents');
 
+router.get('/', contentsCtrl.index);
 
 /*---------- Protected Routes ----------*/
 // Process the token for only the routes below

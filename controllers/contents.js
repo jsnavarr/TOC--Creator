@@ -1,7 +1,8 @@
 var Content = require('../models/content');
 
 module.exports = {
-  create
+  create,
+  index
 };
 
 async function create(req, res) {
@@ -21,7 +22,13 @@ async function create(req, res) {
   }
 }
 
-
+async function index(req, res) {
+  console.log('my content being called');
+  const contents = await Content.find({})
+    .sort({createdAt: 1})
+    .limit(req.query.limit || 20);
+  res.json(contents);
+}
 
 
 

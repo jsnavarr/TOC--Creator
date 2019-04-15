@@ -277,7 +277,7 @@ class App extends Component {
           <MyContentPage
             history={history}
             user={this.state.user}
-            handleMyContent={this.handleMyContent}
+            // handleMyContent={this.handleMyContent}
           />
         }/>        
         <Route exact path='/signup' render={({ history }) => 
