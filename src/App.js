@@ -20,6 +20,7 @@ class App extends Component {
       output:"", //HTML with TOC
       contentSaved: false,
       contents: [],
+      user: userService.getUser()
     };
     
   }
@@ -253,29 +254,24 @@ class App extends Component {
             </Segment.Group>
             <Segment.Group horizontal>
               <Segment>
-                <Input id="inputKeyWords" label='key words' placeholder='my key words' />
+                <Input fluid id="inputKeyWords" label='key words' placeholder='my key words' />
               </Segment>
             </Segment.Group>
             <Segment.Group horizontal>
-              <Segment inverted color='orange'>
-                <Button 
+              <Segment inverted color='black'>
+                <Button inverted
                     disabled = {!this.state.user || !this.state.contentSaved}
-                    color='blue'
+                    color='yellow'
                     onClick={this.handleNewContent}
                   >New</Button>
-                <Button 
+                <Button inverted
                     disabled = {!this.state.user || this.state.input==="" || this.state.contentSaved}
-                    color='teal'
+                    color='green'
                     onClick={this.handleSaveContent}
                   >Save</Button>
               </Segment>
-              <Segment>
+              <Segment inverted color='black' textAlign='center'>
                 <Link to='/mycontent' className='MyContent-Link'>View My Content</Link>
-                {/* <Button 
-                  disabled = {!this.state.user}
-                  color='blue'
-                  onClick={this.handleViewMyContent}
-                >View My Content</Button> */}
               </Segment>
             </Segment.Group>
           </Segment.Group>

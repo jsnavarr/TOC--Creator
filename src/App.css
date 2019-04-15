@@ -21,3 +21,8 @@ textarea {
   padding: 5px 10px;
   background: lightgoldenrodyellow
 }
+
+.MyContent-Link {
+  color: azure;
+  font-weight: 800;
+}

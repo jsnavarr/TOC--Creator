@@ -24,7 +24,7 @@ async function create(req, res) {
 }
 
 async function index(req, res) {
-  console.log('my content being called');
+  console.log('my content being called', req.body.user_id);
   const contents = await Content.find({})
     .sort({createdAt: 1})
     .limit(req.query.limit || 20);

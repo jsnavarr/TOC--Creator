@@ -8,11 +8,13 @@ export default {
 };
 
 function index() {
+  // console.log('user in index ', user);
   const options = {
     method: 'GET',
     headers: {
       'Authorization': 'Bearer ' + tokenService.getToken()
-    }
+    },
+    // body: JSON.stringify({user_id: user._id})
   };
   console.log('calling fetch');
   return fetch(BASE_URL, options).then(res => res.json());
@@ -29,9 +31,6 @@ function create(object) {
       'Authorization': 'Bearer ' + tokenService.getToken()
     },
     body: JSON.stringify(object)
-
-    // body.keywords: toJSON(keywords),
-    // keywords: keywords
   };
 
   return fetch(BASE_URL, options).then(res => res.json());

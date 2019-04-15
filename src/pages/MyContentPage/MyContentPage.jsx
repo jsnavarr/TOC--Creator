@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
-// import { Segment, Button, Input, SegmentGroup} from 'semantic-ui-react';
+import { Table} from 'semantic-ui-react';
 import {Link} from 'react-router-dom';
-import styles from './MyContentPage.module.css';
+import './MyContentPage.css';
 import contentService from '../../utils/contentService';
-
 
 class MyContentPage extends Component {
   async componentDidMount() {
@@ -16,36 +15,36 @@ class MyContentPage extends Component {
   render(){
     console.log('the content', this.props);
     const contentRows = this.props.contents.map((content, idx) => (
-      <tr key={idx}>
-        <td><span className="badge">{idx + 1}</span></td>
-        <td>{content.createdAt}</td>
-        <td>{content.keywords}</td>
-        <td>{content.TOC}</td>
-      </tr>
+      <Table.Row key={idx}>
+        <Table.Cell>{idx + 1}</Table.Cell>
+        <Table.Cell>{content.createdAt}</Table.Cell>
+        <Table.Cell>{content.keywords}</Table.Cell>
+        <Table.Cell>{content.TOC}</Table.Cell>
+      </Table.Row>
     ));
 
     return (
-          <div className={styles.MyContentStyles}>
+        <div className='MyContent'>
           <header className='header-footer'>My content</header>
           {this.props.contents.length ? 
-            <table className={`${styles.table} table text-info`}>
-              <thead>
-                <tr>
-                  <th width={50}>#</th>
-                  <th width={200}>Date Created</th>
-                  <th width={150}>Keywords</th>
-                  <th>TOC</th>
-                </tr>
-              </thead>
-              <tbody>
+            <Table id="MyContentTable" celled striped size='small'>
+              <Table.Header>
+                <Table.Row>
+                  <Table.HeaderCell>#</Table.HeaderCell>
+                  <Table.HeaderCell>Date Created</Table.HeaderCell>
+                  <Table.HeaderCell>Keywords</Table.HeaderCell>
+                  <Table.HeaderCell>TOC</Table.HeaderCell>
+                </Table.Row>
+              </Table.Header>
+              <Table.Body>
                 {contentRows}
-              </tbody>
-            </table>
+              </Table.Body>
+            </Table>
             :
-            <h4 className='text-info'>No Content created yet</h4>
+            <h4 className='text-info'>No Content saved yet</h4>
           }
           <div>
-            <Link className={`${styles.cancel} btn btn-default btn-sm`} to='/'>Back to Home</Link>
+            <Link className="cancel btn btn-default btn-sm" to='/'>Back to Home</Link>
           </div>
         </div>
     );
