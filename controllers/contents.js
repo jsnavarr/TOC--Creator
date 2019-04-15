@@ -12,6 +12,7 @@ async function create(req, res) {
     const content = new Content({
       owner: req.user._id, 
       HTML: req.body.input,
+      TOC: req.body.TOC,
       HTML_TOC: req.body.output, 
       keywords: req.body.keywords});
     await content.save();

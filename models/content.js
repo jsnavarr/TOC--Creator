@@ -11,6 +11,10 @@ var Schema = mongoose.Schema;
         type: String,
         // required: true
     },
+    TOC: {
+        type: String,
+        //required: true
+    },
     HTML_TOC: {
         type: String,
         // required: true

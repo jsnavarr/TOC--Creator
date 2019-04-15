@@ -16,8 +16,10 @@ class App extends Component {
       regex1: /(<\s*h([1-5]))\s*(id\s*=\s*"(\w+)"\s*)*>/g, //regExp for open H tags with and without id
       regex2: /<\s*\/h[1-5]\s*>/g, //regExp for closing H tags
       input:"", //HTML without TOC
+      TOC:"", //the TOC
       output:"", //HTML with TOC
       contentSaved: false,
+      contents: [],
     };
     
   }
@@ -169,7 +171,8 @@ class App extends Component {
       document.getElementById("HTMLOutput").value = r[1]+'\n'+r[0];
       //set the states of input (no TOC) and output (with TOC)
       this.setState({
-        input: input, 
+        input: input,
+        TOC: r[1],
         output: r[1]+'\n'+r[0]});  
       } else {
         //the content was deleted so clean the output 
@@ -195,8 +198,13 @@ class App extends Component {
   handleSaveContent = () => {
     // console.log('app.js state ', this.state);
     var keywords = document.getElementById("inputKeyWords").value;
-    contentService.create({keywords, input: this.state.input, output:this.state.output});
+    contentService.create({keywords, input: this.state.input, output:this.state.output, TOC: this.state.TOC});
     this.setState({contentSaved: true});
+  }
+
+  handleMyContent = (contents) => {
+    this.setState({ contents });
+
   }
 
   handleLogout = () => {
@@ -277,7 +285,8 @@ class App extends Component {
           <MyContentPage
             history={history}
             user={this.state.user}
-            // handleMyContent={this.handleMyContent}
+            contents={this.state.contents}
+            handleMyContent={this.handleMyContent}
           />
         }/>        
         <Route exact path='/signup' render={({ history }) => 

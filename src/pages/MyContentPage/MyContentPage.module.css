@@ -1,10 +1,15 @@
-.Content {
+.MyContentStyles {
   display: flex;
   flex-flow: column nowrap;
   align-items: center;
   margin-bottom: 50px;
 }
 
-.Content-cancel {
+.cancel {
   width: 100px;
+  margin-top: 40px;
+}
+
+.table {
+  width: 90%;
 }
