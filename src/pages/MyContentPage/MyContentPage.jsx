@@ -7,7 +7,8 @@ import contentService from '../../utils/contentService';
 
 class MyContentPage extends Component {
   async componentDidMount() {
-    const contents = await contentService.index();
+    console.log('user in mount ', this.props);
+    const contents = await contentService.index(this.props.user);
     this.props.handleMyContent(contents);
     console.log('content 1 ', contents);
   }
