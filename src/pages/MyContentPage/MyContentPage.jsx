@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
-import { Table} from 'semantic-ui-react';
+import { Table, Button} from 'semantic-ui-react';
 import {Link} from 'react-router-dom';
 import './MyContentPage.css';
 import contentService from '../../utils/contentService';
+
+import moment from 'moment';
 
 class MyContentPage extends Component {
   async componentDidMount() {
@@ -17,9 +19,11 @@ class MyContentPage extends Component {
     const contentRows = this.props.contents.map((content, idx) => (
       <Table.Row key={idx}>
         <Table.Cell>{idx + 1}</Table.Cell>
-        <Table.Cell>{content.createdAt}</Table.Cell>
+        <Table.Cell>{moment(content.createdAt).format("MMMM Do YYYY")}</Table.Cell>
         <Table.Cell>{content.keywords}</Table.Cell>
         <Table.Cell>{content.TOC}</Table.Cell>
+        <Table.Cell><Button color='green'>Open</Button></Table.Cell>
+        <Table.Cell><Button color='red'>Delete</Button></Table.Cell>
       </Table.Row>
     ));
 
@@ -34,6 +38,8 @@ class MyContentPage extends Component {
                   <Table.HeaderCell>Date Created</Table.HeaderCell>
                   <Table.HeaderCell>Keywords</Table.HeaderCell>
                   <Table.HeaderCell>TOC</Table.HeaderCell>
+                  <Table.HeaderCell>Open</Table.HeaderCell>
+                  <Table.HeaderCell>Delete</Table.HeaderCell>
                 </Table.Row>
               </Table.Header>
               <Table.Body>
