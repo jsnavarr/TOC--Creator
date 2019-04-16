@@ -14,16 +14,30 @@ class MyContentPage extends Component {
     console.log('content 1 ', contents);
   }
 
+  async handleDeleteContent(id){
+    console.log('delete content by id ', id);
+    // const contents = await contentService.show(this.props.user._id);
+    // this.props.handleMyContent(contents);
+    // console.log('content 1 ', contents);
+    await contentService.deleteContent(id);
+    const contents = this.props.contents.filter(content => content._id !== id)
+    this.props.handleMyContent(contents);
+    console.log(this.props.contents);
+    // this.setState({contentRows})
+  }
+
   render(){
     console.log('the content', this.props);
     const contentRows = this.props.contents.map((content, idx) => (
-      <Table.Row key={idx}>
+      <Table.Row key={content._id}>
         <Table.Cell>{idx + 1}</Table.Cell>
         <Table.Cell>{moment(content.createdAt).format("MMMM Do YYYY")}</Table.Cell>
         <Table.Cell>{content.keywords}</Table.Cell>
         <Table.Cell>{content.TOC}</Table.Cell>
         <Table.Cell><Button color='green'>Open</Button></Table.Cell>
-        <Table.Cell><Button color='red'>Delete</Button></Table.Cell>
+        <Table.Cell><Button color='red'
+          onClick={() => this.handleDeleteContent(content._id)}
+        >Delete</Button></Table.Cell>
       </Table.Row>
     ));
 

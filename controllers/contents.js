@@ -3,7 +3,8 @@ var Content = require('../models/content');
 module.exports = {
   create,
   index,
-  show
+  show,
+  deleteContent,
 };
 
 async function create(req, res) {
@@ -40,5 +41,15 @@ async function show(req, res) {
   res.json(contents);
 }
 
+
+async function deleteContent(req, res) {
+  console.log('delete being called', req.params.id);
+  const contents = await Content.findByIdAndRemove(req.params.id, function(err){
+    if(err){
+      console.log('something went wrong trying to delete content');
+    }
+  });
+  res.json(contents);
+}
 
 

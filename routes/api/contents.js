@@ -9,7 +9,9 @@ router.get('/', contentsCtrl.index);
 // Process the token for only the routes below
 router.use(require('../../config/auth'));
 router.post('/', checkAuth, contentsCtrl.create);
+router.delete('/:id', checkAuth, contentsCtrl.deleteContent);
 router.get('/:id', checkAuth, contentsCtrl.show);
+
 
 /*----- Helper Functions -----*/
 function checkAuth(req, res, next) {

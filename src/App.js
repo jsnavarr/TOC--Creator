@@ -210,12 +210,7 @@ class App extends Component {
 
   handleLogout = () => {
     userService.logout();
-    this.setState({ user: null });
-  }
-
-  handleLogout = () => {
-    userService.logout();
-    this.setState({ user: null });
+    this.setState({ user: null, input: "", output:"", keywords:"", TOC:"", contentSaved: false });
   }
 
   handleSignupOrLogin = () => {
@@ -242,6 +237,7 @@ class App extends Component {
             <Segment.Group horizontal>
               <Segment inverted color='teal'>
                 <textarea id="HTMLInput" rows="30" cols="80"
+                  value={this.state.input}
                   disabled = {this.state.contentSaved}
                   onChange={this.handleTextAreaChange}
                 ></textarea>
@@ -254,7 +250,7 @@ class App extends Component {
             </Segment.Group>
             <Segment.Group horizontal>
               <Segment>
-                <Input fluid id="inputKeyWords" label='key words' placeholder='my key words' />
+                <Input fluid id="inputKeyWords" label='key words' placeholder='my key words' value={this.state.keywords}/>
               </Segment>
             </Segment.Group>
             <Segment.Group horizontal>

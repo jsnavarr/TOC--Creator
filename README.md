@@ -2,7 +2,8 @@
 
 **TOC--Creator** is a tool which can be used in knowledge/articles/content databases to create a table of content based on < H > HTML tags hierarchy, i.e., < H2 > tags are subcontent inside < H1 > tags, < H3 > tags are sub-content of < H2 > tags, and so on.
 
-Live version: [TOC--Creator](https://toc--creator.herokuapp.com/ "TOC Creator Homepage")		
+Live version: [TOC--Creator](https://toc--creator.herokuapp.com/ "TOC Creator Homepage")	
+	
 [Github](https://github.com/jsnavarr/TOC--Creator "Github")
 
 
@@ -10,6 +11,16 @@ Live version: [TOC--Creator](https://toc--creator.herokuapp.com/ "TOC Creator Ho
 **TOC--Creator** takes as input an HTML file stored in a database, it adds its TOC and the output will also be stored in a database.
 
 ![Welcome](https://github.com/jsnavarr/TOC--Creator/blob/master/public/images/WelcomePage.png)
+
+### What It Has/What Was Used:
+* React
+* Express
+* Javascript/MongoDB
+* Partial CRUD
+* Django's Built-In Authentication
+* JavaScript
+* HTML/CSS/semantic ui react
+* Heroku
 
 ## User Stories
 As a user I want to be able to log-in in order to save/view information to the database.

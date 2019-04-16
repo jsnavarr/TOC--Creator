@@ -5,7 +5,8 @@ const BASE_URL = '/api/contents/';
 export default {
   create,
   index,
-  show
+  show,
+  deleteContent
 };
 
 function index() {
@@ -32,6 +33,19 @@ function show(user_id) {
   };
   console.log('calling fetch for show', user_id);
   return fetch(BASE_URL+user_id, options).then(res => res.json());
+}
+
+function deleteContent(id) {
+  // console.log('user in index ', user);
+  const options = {
+    method: 'DELETE',
+    headers: {
+      'Authorization': 'Bearer ' + tokenService.getToken()
+    },
+    user_id: JSON.stringify({id: id})
+  };
+  console.log('calling fetch for delete', id);
+  return fetch(BASE_URL+id, options).then(res => res.json());
 }
 
 function create(object) {
