@@ -38,7 +38,7 @@ As an admin I want to be able to delete any file in the database.
 As a user I want to be able to apply different pre-defined styles to the TOC that **TOC--Creator** made.
 
 
-##Design
+## Design
 When this app was in planning, 3 models were defined with 1:1 and 1:N relationships.
 
 ![Schemas and ERD](https://github.com/jsnavarr/TOC--Creator/blob/master/public/images/TOCSchemasAndERD.png)
