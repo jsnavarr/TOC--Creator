@@ -16,7 +16,7 @@ module.exports = {
 }
 
 async function signup(req, res) {
-  console.log('signup was called');
+  // console.log('signup was called');
   const user = new User(req.body);
   try {
     await user.save();

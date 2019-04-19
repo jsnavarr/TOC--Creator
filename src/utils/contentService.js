@@ -18,7 +18,7 @@ function index() {
     },
     // body: JSON.stringify({user_id: user._id})
   };
-  console.log('calling fetch');
+  // console.log('calling fetch');
   return fetch(BASE_URL, options).then(res => res.json());
 }
 
@@ -31,7 +31,7 @@ function show(user_id) {
     },
     user_id: JSON.stringify({user_id: user_id})
   };
-  console.log('calling fetch for show', user_id);
+  // console.log('calling fetch for show', user_id);
   return fetch(BASE_URL+user_id, options).then(res => res.json());
 }
 
@@ -44,13 +44,13 @@ function deleteContent(id) {
     },
     user_id: JSON.stringify({id: id})
   };
-  console.log('calling fetch for delete', id);
+  // console.log('calling fetch for delete', id);
   return fetch(BASE_URL+id, options).then(res => res.json());
 }
 
 function create(object) {
   // state.input_keywords = keywords;
-  console.log('state ', object);
+  // console.log('state ', object);
   const options = {
     method: 'POST',
     headers: {

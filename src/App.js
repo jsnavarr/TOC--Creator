@@ -20,9 +20,22 @@ class App extends Component {
       output:"", //HTML with TOC
       contentSaved: false,
       contents: [],
-      user: userService.getUser()
-    };
-    
+      user: userService.getUser(),
+      message:"",
+    }; 
+  }
+
+  cleanInputs(){
+    this.setState({
+      input:"",
+      TOC: "",
+      output:"",
+      message:"",
+    })
+  }
+
+  setMessage(msg){
+    this.setState({message: msg});
   }
 
   formTOC (TOC, HNumberArray){
@@ -153,10 +166,10 @@ class App extends Component {
     //form the TOC with proper ul and li tags
     TOC = this.formTOC(TOC, HNumberArray);
     // console.log('new input \n'+str);
-    console.log('TOC \n'+TOC);
-    console.log('H tags \n'+HNumberArray);
-    console.log('output --\n', output);
-    console.log('input --\n', str);
+    // console.log('TOC \n'+TOC);
+    // console.log('H tags \n'+HNumberArray);
+    // console.log('output --\n', output);
+    // console.log('input --\n', str);
     return [output, TOC];
   };
 
@@ -168,19 +181,35 @@ class App extends Component {
       var r = this.parseHTag(this.state.regex1, this.state.regex2, input);
       //if there is TOC
       if (r && r.length>=2 && r[1]){
-      //set the output to the text area on the right
-      document.getElementById("HTMLOutput").value = r[1]+'\n'+r[0];
-      //set the states of input (no TOC) and output (with TOC)
-      this.setState({
-        input: input,
-        TOC: r[1],
-        output: r[1]+'\n'+r[0]});  
+        //insert TOC to the output <body>
+
+        //find the <body>
+        var regex=/(<\s*body\s*[^>]*>)/;
+        var bodyMatch = regex.exec(r[0]);
+        // console.log('bodyMatch ', bodyMatch, bodyMatch[0].length, bodyMatch[1].length, bodyMatch.index);
+        //if <body> was found
+        if(bodyMatch){
+            r[0] = r[0].slice(0, bodyMatch.index+bodyMatch[0].length)+'\n'+r[1]+'\n'+r[0].slice(bodyMatch.index+bodyMatch[0].length, r[0].length);
+          //set the output to the text area on the right
+          document.getElementById("HTMLOutput").value = r[0];
+          //set the states of input (no TOC) and output (with TOC)
+          this.setState({
+            input: input,
+            TOC: r[1],
+            output: r[0]});  
+        } else{
+          this.cleanInputs();
+          this.setMessage("there was a problem trying to insert the TOC");
+          document.getElementById("HTMLOutput").value = "there was a problem trying to insert the TOC";
+        }
       } else {
+        this.cleanInputs();
+        this.setMessage("there was a problem with the input");
         //the content was deleted so clean the output 
-        document.getElementById("HTMLOutput").value = "";
-        this.setState({
-          input: "", 
-          output: ""});    
+        // document.getElementById("HTMLOutput").value = "";
+        // this.setState({
+        //   input: "", 
+        //   output: ""});    
       }
     }
   }
@@ -244,7 +273,7 @@ class App extends Component {
               </Segment>
               <Segment inverted color='teal'>
               <textarea disabled id="HTMLOutput" rows="30" cols="80"
-                value={this.state.output}
+                value={this.state.output || this.state.message}
               ></textarea>
               </Segment>
             </Segment.Group>
