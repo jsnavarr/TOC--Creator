@@ -10,7 +10,9 @@ router.get('/', contentsCtrl.index);
 router.use(require('../../config/auth'));
 router.post('/', checkAuth, contentsCtrl.create);
 router.delete('/:id', checkAuth, contentsCtrl.deleteContent);
-router.get('/:id', checkAuth, contentsCtrl.show);
+router.get('/user/:id', checkAuth, contentsCtrl.show);
+router.get('/:id', checkAuth, contentsCtrl.openContent);
+
 
 
 /*----- Helper Functions -----*/

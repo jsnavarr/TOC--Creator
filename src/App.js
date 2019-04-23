@@ -6,6 +6,7 @@ import userService from './utils/userService';
 import NavBar from './components/NavBar/NavBar';
 import SignupPage from './pages/SignupPage/SignupPage';
 import MyContentPage from './pages/MyContentPage/MyContentPage';
+import ViewContentPage from './pages/ViewContentPage/ViewContentPage';
 import LoginPage from './pages/LoginPage/LoginPage';
 import contentService from './utils/contentService';
 
@@ -232,9 +233,13 @@ class App extends Component {
     this.setState({contentSaved: true});
   }
 
+  handleOpenContent = (HTML, TOC, HTML_TOC, keywords) => {
+    // console.log('app.js state ', this.state);
+    this.setState({input: HTML, output: HTML_TOC, TOC: TOC, keywords: keywords, contentSaved: true});
+  }
+
   handleMyContent = (contents) => {
     this.setState({ contents });
-
   }
 
   handleLogout = () => {
@@ -249,10 +254,12 @@ class App extends Component {
   async componentDidMount() {
     const user = userService.getUser();
     this.setState({ user });
+    // console.log('current state ', this.state);
   }
 
   render() {
-    // console.log('content saved ', this.state.contentSaved);
+    // console.log('content saved ', this.state.contents);
+    // console.log('content saved ', this.state.match.params.id);
     return (
       <div>
       <Switch>
@@ -314,6 +321,12 @@ class App extends Component {
           :
             <Redirect to='/login'/>
         }/>        
+        
+        <Route exact path='/mycontent/:id' 
+          component = { 
+            userService.getUser() ? ViewContentPage
+            : LoginPage}
+        />
         <Route exact path='/signup' render={({ history }) => 
           <SignupPage
             history={history}

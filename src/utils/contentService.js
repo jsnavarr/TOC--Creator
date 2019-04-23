@@ -6,7 +6,8 @@ export default {
   create,
   index,
   show,
-  deleteContent
+  deleteContent, 
+  openContent,
 };
 
 function index() {
@@ -32,7 +33,21 @@ function show(user_id) {
     user_id: JSON.stringify({user_id: user_id})
   };
   // console.log('calling fetch for show', user_id);
-  return fetch(BASE_URL+user_id, options).then(res => res.json());
+  return fetch(BASE_URL+'user/'+user_id, options).then(res => res.json());
+}
+
+function openContent(content_id) {
+  console.log('open content ', content_id);
+  const options = {
+    method: 'GET',
+    headers: {
+      'Authorization': 'Bearer ' + tokenService.getToken()
+    },
+    content_id: JSON.stringify({content_id: content_id})
+  };
+  console.log('open content ', options.content_id);
+  // console.log('calling fetch for show', user_id);
+  return fetch(BASE_URL+content_id, options).then(res => res.json());
 }
 
 function deleteContent(id) {

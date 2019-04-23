@@ -1,0 +1,16 @@
+#LinkBackHome {
+  margin: 10px;
+}
+
+.ViewContent {
+  margin: 20px auto;
+  width: 90%;
+  text-align: center;
+}
+
+#fullHTML {
+  background: #fff;
+  width: 100%;
+  overflow: scroll;
+  margin-top: 20px;
+}

@@ -5,6 +5,7 @@ module.exports = {
   index,
   show,
   deleteContent,
+  openContent,
 };
 
 async function create(req, res) {
@@ -52,4 +53,10 @@ async function deleteContent(req, res) {
   res.json(contents);
 }
 
+async function openContent(req, res) {
+  console.log('open being called', req.params);
+  const content = await Content.find({_id: req.params.id});
+  console.log('content ', content);
+  res.json(content);
+}
 
