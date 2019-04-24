@@ -23,6 +23,7 @@ class App extends Component {
       contents: [],
       user: userService.getUser(),
       message:"",
+      divClassName:"",
     }; 
   }
 
@@ -32,6 +33,7 @@ class App extends Component {
       TOC: "",
       output:"",
       message:"",
+      divClassName:"",
     })
   }
 
@@ -78,7 +80,7 @@ class App extends Component {
       }
       //need to close always one <ul> because the first one has no indentation
       // newTOC+="</ul>";
-      console.log('Final TOC \n', newTOC);
+      // console.log('Final TOC \n', newTOC);
     }
     return newTOC;
   }
@@ -97,6 +99,8 @@ class App extends Component {
     var updatedHTag; //to store the updated H tag (with a newly added ID when none is present)
     const regExp=/<\s*h[1-5]\s*id\s*=\s*"\w*"\s*>/; // regular expression to test if tag has already an ID
     const regExpCH=/<\s*\/h[1-5]\s*>/;
+    regExpO.lastIndex=0;
+    regExpC.lastIndex=0;
     //parse the HTML input file while there are opening H tags
     while((openingH = regExpO.exec(str))!== null){
       //get the index of the opening H tag
@@ -105,7 +109,8 @@ class App extends Component {
       closingH = regExpC.exec(str);
       //get the index of the closing H tag
       regExpCIdx = regExpC.lastIndex;
-
+      // console.log('opening ', openingH);
+      // console.log('closing ', closingH);
       if(openingH && closingH){
         //check if there is already an "id"
         if(!regExp.test(openingH)){
@@ -166,6 +171,12 @@ class App extends Component {
     output+=str.slice(regExpCIdx,str.length);
     //form the TOC with proper ul and li tags
     TOC = this.formTOC(TOC, HNumberArray);
+    //add div class name if the user added it
+    let className = document.getElementById("inputDivClassName").value;
+    if (className){
+      TOC='<div class="'+className+'">\n'+TOC+'\n</div>';
+      // console.log('TOC with className ',TOC);
+    }
     // console.log('new input \n'+str);
     // console.log('TOC \n'+TOC);
     // console.log('H tags \n'+HNumberArray);
@@ -174,9 +185,9 @@ class App extends Component {
     return [output, TOC];
   };
 
-  handleTextAreaChange = async (event)=>{
-    event.persist();
-    var input = event.currentTarget.value;
+  handleParsing(input){
+    // event.persist();
+    // var input = event.currentTarget.value;
     //if there is data in the input
     if (input){
       var r = this.parseHTag(this.state.regex1, this.state.regex2, input);
@@ -190,19 +201,18 @@ class App extends Component {
         // console.log('bodyMatch ', bodyMatch, bodyMatch[0].length, bodyMatch[1].length, bodyMatch.index);
         //if <body> was found
         if(bodyMatch){
-            r[0] = r[0].slice(0, bodyMatch.index+bodyMatch[0].length)+'\n'+r[1]+'\n'+r[0].slice(bodyMatch.index+bodyMatch[0].length, r[0].length);
-          //set the output to the text area on the right
-          document.getElementById("HTMLOutput").value = r[0];
-          //set the states of input (no TOC) and output (with TOC)
-          this.setState({
-            input: input,
-            TOC: r[1],
-            output: r[0]});  
+          r[0] = r[0].slice(0, bodyMatch.index+bodyMatch[0].length)+'\n'+r[1]+'\n'+r[0].slice(bodyMatch.index+bodyMatch[0].length, r[0].length);
         } else{
-          this.cleanInputs();
-          this.setMessage("there was a problem trying to insert the TOC");
-          document.getElementById("HTMLOutput").value = "there was a problem trying to insert the TOC";
+          //if not body then insert TOC at the beginning of the input
+          r[0] = r[1]+'\n'+r[0];
         }
+        //set the output to the text area on the right
+        document.getElementById("HTMLOutput").value = r[0];
+        //set the states of input (no TOC) and output (with TOC)
+        this.setState({
+          input: input,
+          TOC: r[1],
+          output: r[0]});  
       } else {
         this.cleanInputs();
         this.setMessage("there was a problem with the input");
@@ -215,14 +225,28 @@ class App extends Component {
     }
   }
 
+  handleTextAreaChange = async (event)=>{
+    var input = event.currentTarget.value;
+    if(input) this.handleParsing(input);
+  }
+
+  handleClassNameChange= async (e) => {
+    this.setState({divClassName: e.target.value});
+  }
+
+  handleAddClass = async ()=>{
+    // console.log('new input \n', this.state.input);
+    this.handleParsing(this.state.input);
+  }
+
   handleNewContent = () => {
     // console.log('app.js state ', this.state);
     document.getElementById("inputKeyWords").value="";
     document.getElementById("HTMLOutput").value = "";
     document.getElementById("HTMLInput").value = "";
+    document.getElementById("inputDivClassName").value = "";
+    this.cleanInputs();
     this.setState({
-      input:"",
-      output:"",
       contentSaved: false});
   }
 
@@ -269,28 +293,54 @@ class App extends Component {
             user={this.state.user}
             handleLogout={this.handleLogout}
           />
-          <Segment.Group stacked>
+          <Segment.Group stacked style={{margin: "0 auto"}}>
             <Segment.Group horizontal>
-              <Segment inverted color='teal'>
-                <textarea id="HTMLInput" rows="30" cols="80"
-                  value={this.state.input}
-                  disabled = {this.state.contentSaved}
-                  onChange={this.handleTextAreaChange}
-                ></textarea>
-              </Segment>
-              <Segment inverted color='teal'>
-              <textarea disabled id="HTMLOutput" rows="30" cols="80"
-                value={this.state.output || this.state.message}
-              ></textarea>
-              </Segment>
+              <Segment.Group stacked style={{width:"50%"}}>
+                <Segment.Group horizontal>
+                  <Segment inverted color='teal'>
+                    <Input fluid id="inputDivClassName" label='Class Name: '
+                      placeholder='optional class name to enclose TOC' 
+                      value={this.state.divClassName}
+                      onChange={this.handleClassNameChange}
+                      />
+                  </Segment>
+                  <Segment inverted color='teal' style={{display:"flex", justifyContent:"flex-end"}}>
+                    <Button id='updateClassButton'
+                      disabled = {!this.state.divClassName || !this.state.input}
+                        color='blue'
+                        onClick={this.handleAddClass}
+                      >Update
+                    </Button>
+                  </Segment>
+                </Segment.Group>
+                <Segment inverted color='teal'>
+                  <Input fluid id="inputKeyWords" label='Key Words' placeholder='optional key words' value={this.state.keywords}/>
+                </Segment>
+                <Segment inverted color='teal' style={{display:"flex"}}>
+                  <textarea id="HTMLInput" rows="25"
+                    value={this.state.input}
+                    disabled = {this.state.contentSaved}
+                    onChange={this.handleTextAreaChange}
+                  ></textarea>
+                </Segment>
+              </Segment.Group>             
+              <Segment.Group stacked color='teal' style={{display:"flex", width:"50%"}}>
+                  <Segment inverted color='teal'>
+                    <textarea disabled id="TOC" rows="15"
+                      value={this.state.TOC}
+                    ></textarea>
+                  </Segment>
+                  <Segment inverted color='teal'>
+                  <textarea disabled id="HTMLOutput" rows="15"
+                    value={this.state.output || this.state.message}
+                  ></textarea>
+                  </Segment>
+                </Segment.Group>
             </Segment.Group>
             <Segment.Group horizontal>
-              <Segment>
-                <Input fluid id="inputKeyWords" label='key words' placeholder='my key words' value={this.state.keywords}/>
-              </Segment>
             </Segment.Group>
             <Segment.Group horizontal>
-              <Segment inverted color='black'>
+              <Segment inverted color='black' style={{display: "flex", justifyContent:"space-evenly"}}>
                 <Button inverted
                     disabled = {!this.state.user || !this.state.contentSaved}
                     color='yellow'
@@ -301,6 +351,11 @@ class App extends Component {
                     color='green'
                     onClick={this.handleSaveContent}
                   >Save</Button>
+                {/* <Button inverted
+                    disabled = {!this.state.user || this.state.input==="" || this.state.contentSaved}
+                    color='blue'
+                    onClick={this.handleParseContent}
+                  >Parse</Button>                   */}
               </Segment>
               <Segment inverted color='black' textAlign='center'>
                 {this.state.user && <Link to='/mycontent' className='MyContent-Link'>

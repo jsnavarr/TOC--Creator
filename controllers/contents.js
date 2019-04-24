@@ -54,9 +54,9 @@ async function deleteContent(req, res) {
 }
 
 async function openContent(req, res) {
-  console.log('open being called', req.params);
+  // console.log('open being called', req.params);
   const content = await Content.find({_id: req.params.id});
-  console.log('content ', content);
+  // console.log('content ', content);
   res.json(content);
 }
 
