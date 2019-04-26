@@ -1,6 +1,7 @@
 body{
   background: azure;
 }
+
 .App{
   text-align: center;
   min-height: 100vh;
@@ -24,5 +25,9 @@ textarea {
 
 .MyContent-Link {
   color: azure;
+  font-weight: 800;
+}
+
+p {
   font-weight: 800;
 }

@@ -295,7 +295,7 @@ class App extends Component {
           />
           <Segment.Group stacked style={{margin: "0 auto"}}>
             <Segment.Group horizontal>
-              <Segment.Group stacked style={{width:"50%"}}>
+              <Segment.Group stacked style={{width:"50%", background: "#00b5ad"}}>
                 <Segment.Group horizontal>
                   <Segment inverted color='teal'>
                     <Input fluid id="inputDivClassName" label='Class Name: '
@@ -316,24 +316,27 @@ class App extends Component {
                 <Segment inverted color='teal'>
                   <Input fluid id="inputKeyWords" label='Key Words' placeholder='optional key words' value={this.state.keywords}/>
                 </Segment>
-                <Segment inverted color='teal' style={{display:"flex"}}>
-                  <textarea id="HTMLInput" rows="25"
+                <Segment inverted color='teal' style={{display:"flex", flexDirection:"column"}}>
+                  <p>HTML input:</p>
+                  <textarea id="HTMLInput" rows="28"
                     value={this.state.input}
                     disabled = {this.state.contentSaved}
                     onChange={this.handleTextAreaChange}
                   ></textarea>
                 </Segment>
               </Segment.Group>             
-              <Segment.Group stacked color='teal' style={{display:"flex", width:"50%"}}>
+              <Segment.Group stacked style={{display:"flex", width:"50%", background: "#00b5ad"}}>
                   <Segment inverted color='teal'>
+                    <p>TOC:</p>
                     <textarea disabled id="TOC" rows="15"
                       value={this.state.TOC}
                     ></textarea>
                   </Segment>
                   <Segment inverted color='teal'>
-                  <textarea disabled id="HTMLOutput" rows="15"
-                    value={this.state.output || this.state.message}
-                  ></textarea>
+                    <p>HTML output:</p>
+                    <textarea disabled id="HTMLOutput" rows="17"
+                      value={this.state.output || this.state.message}
+                    ></textarea>
                   </Segment>
                 </Segment.Group>
             </Segment.Group>

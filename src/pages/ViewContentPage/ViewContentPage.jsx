@@ -35,14 +35,20 @@ class ViewContentPage extends Component {
                   <Table.HeaderCell>Date Created</Table.HeaderCell>
                   <Table.HeaderCell>Keywords</Table.HeaderCell>
                   <Table.HeaderCell>TOC</Table.HeaderCell>
+                  <Table.HeaderCell>raw TOC</Table.HeaderCell>
                 </Table.Row>
               </Table.Header>
               <Table.Body>
                 <Table.Row>
-                  <Table.Cell>{moment(this.state.content[0].createdAt).format("MMMM Do YYYY")}</Table.Cell>
-                  <Table.Cell>{this.state.content[0].keywords}</Table.Cell>
-                  <Table.Cell>
+                  <Table.Cell style={{width: "10%"}}>{moment(this.state.content[0].createdAt).format("MMMM Do YYYY")}</Table.Cell>
+                  <Table.Cell style={{width: "10%"}}>{this.state.content[0].keywords}</Table.Cell>
+                  <Table.Cell style={{width: "40%"}}>
                     <div style={{ pointerEvents: 'none' }} dangerouslySetInnerHTML = {{ __html: this.state.content[0].TOC }} />
+                  </Table.Cell>
+                  <Table.Cell style={{width: "40%"}}>
+                    <textarea rows={(this.state.content[0].TOC.split('\n')).length} disabled 
+                      value={this.state.content[0].TOC}>
+                    </textarea>
                   </Table.Cell>
                 </Table.Row>
               </Table.Body>
