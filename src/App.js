@@ -127,7 +127,7 @@ class App extends Component {
           //starting from the end of previous closing H tag to the start of this opening H tag
           //then add the opening H tag followed by the new id
           //then add whatever is inside the H tags and the closing H tag
-          updatedHTag=str.slice(inputIdx, regExpOIdx-openingH.length-1)+openingH[1]+` id="${id}">`+str.slice(regExpOIdx,regExpCIdx+1);
+          updatedHTag=str.slice(inputIdx, regExpOIdx-openingH.length+1)+openingH[1]+` id="${id}">`+str.slice(regExpOIdx,regExpCIdx+1);
           //add the updated H tag to the output
           output+=updatedHTag;
           //add the new TOC line to TOC
